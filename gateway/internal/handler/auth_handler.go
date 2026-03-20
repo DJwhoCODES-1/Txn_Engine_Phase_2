@@ -16,6 +16,42 @@ func NewAuthHandler(c *client.AdminClient) *AuthHandler {
 	return &AuthHandler{adminClient: c}
 }
 
+func (h *AuthHandler) Register(c *gin.Context) {
+	var req struct {
+		Name     string `json:"name" binding:"required"`
+		Email    string `json:"email" binding:"required,email"`
+		Mobile   string `json:"mobile" binding:"required"`
+		Password string `json:"password" binding:"required"`
+		Role     string `json:"role" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	res, err := h.adminClient.Register(
+		c.Request.Context(),
+		req.Name,
+		req.Email,
+		req.Mobile,
+		req.Password,
+		req.Role,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req struct {
 		Mobile string `json:"mobile" binding:"required"`

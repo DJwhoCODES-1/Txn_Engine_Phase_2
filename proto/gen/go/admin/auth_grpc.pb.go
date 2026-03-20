@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v7.34.0
-// source: admin/auth.proto
+// source: proto/admin/auth.proto
 
-package adminpb
+package admin
 
 import (
 	context "context"
@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_LoginAdmin_FullMethodName = "/admin.AuthService/LoginAdmin"
-	AuthService_VerifyOtp_FullMethodName  = "/admin.AuthService/VerifyOtp"
+	AuthService_LoginAdmin_FullMethodName    = "/admin.AuthService/LoginAdmin"
+	AuthService_VerifyOtp_FullMethodName     = "/admin.AuthService/VerifyOtp"
+	AuthService_RegisterAdmin_FullMethodName = "/admin.AuthService/RegisterAdmin"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -29,6 +30,7 @@ const (
 type AuthServiceClient interface {
 	LoginAdmin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	VerifyOtp(ctx context.Context, in *VerifyOtpRequest, opts ...grpc.CallOption) (*VerifyOtpResponse, error)
+	RegisterAdmin(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type authServiceClient struct {
@@ -59,12 +61,23 @@ func (c *authServiceClient) VerifyOtp(ctx context.Context, in *VerifyOtpRequest,
 	return out, nil
 }
 
+func (c *authServiceClient) RegisterAdmin(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, AuthService_RegisterAdmin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
 	LoginAdmin(context.Context, *LoginRequest) (*LoginResponse, error)
 	VerifyOtp(context.Context, *VerifyOtpRequest) (*VerifyOtpResponse, error)
+	RegisterAdmin(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedAuthServiceServer) LoginAdmin(context.Context, *LoginRequest)
 }
 func (UnimplementedAuthServiceServer) VerifyOtp(context.Context, *VerifyOtpRequest) (*VerifyOtpResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyOtp not implemented")
+}
+func (UnimplementedAuthServiceServer) RegisterAdmin(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RegisterAdmin not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -138,6 +154,24 @@ func _AuthService_VerifyOtp_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RegisterAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RegisterAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RegisterAdmin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RegisterAdmin(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -153,7 +187,11 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "VerifyOtp",
 			Handler:    _AuthService_VerifyOtp_Handler,
 		},
+		{
+			MethodName: "RegisterAdmin",
+			Handler:    _AuthService_RegisterAdmin_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "admin/auth.proto",
+	Metadata: "proto/admin/auth.proto",
 }

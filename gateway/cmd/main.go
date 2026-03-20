@@ -19,6 +19,7 @@ func main() {
 	authHandler := handler.NewAuthHandler(adminClient)
 
 	r := gin.Default()
+	r.SetTrustedProxies(nil)
 	router.RegisterRoutes(r, authHandler)
 
 	log.Printf("Gateway running on port %s", cfg.Port)

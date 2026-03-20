@@ -2,11 +2,26 @@ syntax = "proto3";
 
 package admin;
 
-option go_package = "txn-engine-phase-2/proto/gen/go/admin;adminpb";
+option go_package = "txn-engine-phase-2/proto/gen/go/admin;admin";
 
 service AuthService {
   rpc LoginAdmin (LoginRequest) returns (LoginResponse);
   rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
+  rpc RegisterAdmin (RegisterRequest) returns (RegisterResponse);
+}
+
+message RegisterRequest {
+  string name = 1;
+  string email = 2;
+  string mobile = 3;
+  string password = 4;
+  string role = 5;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string message = 2;
+  string id = 3;
 }
 
 message LoginRequest {

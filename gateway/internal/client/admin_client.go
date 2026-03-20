@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
-	adminpb "txn-engine-phase-2/proto/gen/go/admin"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	adminpb "txn-engine-phase-2/proto/gen/go/admin"
 )
 
 type AdminClient struct {
@@ -27,6 +27,23 @@ func NewAdminClient(addr string) *AdminClient {
 	return &AdminClient{
 		Client: adminpb.NewAuthServiceClient(conn),
 	}
+}
+
+func (c *AdminClient) Register(
+	ctx context.Context,
+	name, email, mobile, password, role string,
+) (*adminpb.RegisterResponse, error) {
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	return c.Client.RegisterAdmin(ctx, &adminpb.RegisterRequest{
+		Name:     name,
+		Email:    email,
+		Mobile:   mobile,
+		Password: password,
+		Role:     role,
+	})
 }
 
 func (c *AdminClient) Login(ctx context.Context, mobile string) (*adminpb.LoginResponse, error) {
