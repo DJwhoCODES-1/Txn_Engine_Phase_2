@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	GRPCPort  string
-	JWTSecret string
-	MongoURI  string
+	GRPCPort         string
+	JWTSecret        string
+	MongoURI         string
+	WalletServiceURL string
 }
 
 func Load() *Config {
@@ -22,9 +23,10 @@ func Load() *Config {
 	}
 
 	cfg := &Config{
-		GRPCPort:  getEnv("GRPC_PORT", "50051"),
-		JWTSecret: getEnv("JWT_SECRET", "super-secret"),
-		MongoURI:  getEnv("MONGO_URI", "mongodb://localhost:27017"),
+		GRPCPort:         getEnv("GRPC_PORT", "50051"),
+		JWTSecret:        getEnv("JWT_SECRET", "super-secret"),
+		MongoURI:         getEnv("MONGO_URI", "mongodb://localhost:27017"),
+		WalletServiceURL: getEnv("WALLET_SERVICE_URL", "localhost:50052"),
 	}
 
 	log.Println("Config loaded")

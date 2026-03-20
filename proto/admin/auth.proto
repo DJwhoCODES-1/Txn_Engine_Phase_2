@@ -4,10 +4,13 @@ package admin;
 
 option go_package = "txn-engine-phase-2/proto/gen/go/admin;admin";
 
+import "google/protobuf/struct.proto"; // ✅ REQUIRED
+
 service AuthService {
   rpc LoginAdmin (LoginRequest) returns (LoginResponse);
   rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
   rpc RegisterAdmin (RegisterRequest) returns (RegisterResponse);
+  rpc TopUpWallet (TopUpWalletRequest) returns (TopUpWalletResponse);
 }
 
 message RegisterRequest {
@@ -45,4 +48,16 @@ message VerifyOtpResponse {
   string token = 3;
   string refreshToken = 4;
   string id = 5;
+}
+
+message TopUpWalletRequest {
+  google.protobuf.Struct merchant = 1;
+  double amount = 2;
+  google.protobuf.Struct admin = 3;
+}
+
+message TopUpWalletResponse {
+  bool success = 1;
+  string message = 2;
+  string transaction_id = 3;
 }

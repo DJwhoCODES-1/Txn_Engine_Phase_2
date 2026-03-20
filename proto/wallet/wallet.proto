@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package wallet;
+
+option go_package = "txn-engine-phase-2/proto/gen/go/wallet;wallet";
+
+service WalletService {
+  rpc TopUpWallet (TopUpWalletRequest) returns (TopUpWalletResponse);
+}
+
+message TopUpWalletRequest {
+  string userId = 1;
+  double amount = 2;
+}
+
+message TopUpWalletResponse {
+  double prevBalance = 1;
+  double updatedBalance = 2;
+  double lienDeducted = 3;
+}

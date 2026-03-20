@@ -22,6 +22,7 @@ const (
 	AuthService_LoginAdmin_FullMethodName    = "/admin.AuthService/LoginAdmin"
 	AuthService_VerifyOtp_FullMethodName     = "/admin.AuthService/VerifyOtp"
 	AuthService_RegisterAdmin_FullMethodName = "/admin.AuthService/RegisterAdmin"
+	AuthService_TopUpWallet_FullMethodName   = "/admin.AuthService/TopUpWallet"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -31,6 +32,7 @@ type AuthServiceClient interface {
 	LoginAdmin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	VerifyOtp(ctx context.Context, in *VerifyOtpRequest, opts ...grpc.CallOption) (*VerifyOtpResponse, error)
 	RegisterAdmin(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	TopUpWallet(ctx context.Context, in *TopUpWalletRequest, opts ...grpc.CallOption) (*TopUpWalletResponse, error)
 }
 
 type authServiceClient struct {
@@ -71,6 +73,16 @@ func (c *authServiceClient) RegisterAdmin(ctx context.Context, in *RegisterReque
 	return out, nil
 }
 
+func (c *authServiceClient) TopUpWallet(ctx context.Context, in *TopUpWalletRequest, opts ...grpc.CallOption) (*TopUpWalletResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TopUpWalletResponse)
+	err := c.cc.Invoke(ctx, AuthService_TopUpWallet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type AuthServiceServer interface {
 	LoginAdmin(context.Context, *LoginRequest) (*LoginResponse, error)
 	VerifyOtp(context.Context, *VerifyOtpRequest) (*VerifyOtpResponse, error)
 	RegisterAdmin(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	TopUpWallet(context.Context, *TopUpWalletRequest) (*TopUpWalletResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedAuthServiceServer) VerifyOtp(context.Context, *VerifyOtpReque
 }
 func (UnimplementedAuthServiceServer) RegisterAdmin(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RegisterAdmin not implemented")
+}
+func (UnimplementedAuthServiceServer) TopUpWallet(context.Context, *TopUpWalletRequest) (*TopUpWalletResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TopUpWallet not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -172,6 +188,24 @@ func _AuthService_RegisterAdmin_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_TopUpWallet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TopUpWalletRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).TopUpWallet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_TopUpWallet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).TopUpWallet(ctx, req.(*TopUpWalletRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterAdmin",
 			Handler:    _AuthService_RegisterAdmin_Handler,
+		},
+		{
+			MethodName: "TopUpWallet",
+			Handler:    _AuthService_TopUpWallet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"txn-engine-phase-2/admin-service/internal/model"
+	"txn-engine-phase-2/admin-service/internal/service"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -62,5 +63,10 @@ func (r *AdminRepository) MarkOTPVerified(ctx context.Context, mobile string) er
 			},
 		},
 	)
+	return err
+}
+
+func (r *AdminRepository) CreateTxn(txn *service.Transaction) error {
+	_, err := r.col.InsertOne(context.Background(), txn)
 	return err
 }

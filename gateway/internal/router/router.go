@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(r *gin.Engine, authHandler *handler.AuthHandler) {
+func RegisterRoutes(r *gin.Engine, authHandler *handler.AuthHandler, walletHandler *handler.WalletHandler) {
 	api := r.Group("/api")
 
 	auth := api.Group("/auth")
@@ -14,6 +14,11 @@ func RegisterRoutes(r *gin.Engine, authHandler *handler.AuthHandler) {
 		auth.POST("/register", authHandler.Register)
 		auth.POST("/login", authHandler.Login)
 		auth.POST("/verify-otp", authHandler.VerifyOtp)
+	}
+
+	wallet := api.Group("/wallet")
+	{
+		wallet.POST("/topup", walletHandler.TopUpWallet)
 	}
 
 	r.GET("/health", func(c *gin.Context) {

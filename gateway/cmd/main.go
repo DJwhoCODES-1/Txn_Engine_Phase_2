@@ -17,10 +17,11 @@ func main() {
 	adminClient := client.NewAdminClient(cfg.AdminServiceURL)
 
 	authHandler := handler.NewAuthHandler(adminClient)
+	walletHandler := handler.NewWalletHandler(adminClient)
 
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
-	router.RegisterRoutes(r, authHandler)
+	router.RegisterRoutes(r, authHandler, walletHandler)
 
 	log.Printf("Gateway running on port %s", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {

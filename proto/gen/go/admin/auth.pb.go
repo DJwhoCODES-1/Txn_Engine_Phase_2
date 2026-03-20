@@ -9,6 +9,7 @@ package admin
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -389,11 +390,131 @@ func (x *VerifyOtpResponse) GetId() string {
 	return ""
 }
 
+type TopUpWalletRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Merchant      *structpb.Struct       `protobuf:"bytes,1,opt,name=merchant,proto3" json:"merchant,omitempty"`
+	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Admin         *structpb.Struct       `protobuf:"bytes,3,opt,name=admin,proto3" json:"admin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TopUpWalletRequest) Reset() {
+	*x = TopUpWalletRequest{}
+	mi := &file_proto_admin_auth_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TopUpWalletRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TopUpWalletRequest) ProtoMessage() {}
+
+func (x *TopUpWalletRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_admin_auth_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TopUpWalletRequest.ProtoReflect.Descriptor instead.
+func (*TopUpWalletRequest) Descriptor() ([]byte, []int) {
+	return file_proto_admin_auth_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *TopUpWalletRequest) GetMerchant() *structpb.Struct {
+	if x != nil {
+		return x.Merchant
+	}
+	return nil
+}
+
+func (x *TopUpWalletRequest) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *TopUpWalletRequest) GetAdmin() *structpb.Struct {
+	if x != nil {
+		return x.Admin
+	}
+	return nil
+}
+
+type TopUpWalletResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	TransactionId string                 `protobuf:"bytes,3,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TopUpWalletResponse) Reset() {
+	*x = TopUpWalletResponse{}
+	mi := &file_proto_admin_auth_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TopUpWalletResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TopUpWalletResponse) ProtoMessage() {}
+
+func (x *TopUpWalletResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_admin_auth_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TopUpWalletResponse.ProtoReflect.Descriptor instead.
+func (*TopUpWalletResponse) Descriptor() ([]byte, []int) {
+	return file_proto_admin_auth_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TopUpWalletResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *TopUpWalletResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *TopUpWalletResponse) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
 var File_proto_admin_auth_proto protoreflect.FileDescriptor
 
 const file_proto_admin_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x16proto/admin/auth.proto\x12\x05admin\"\x83\x01\n" +
+	"\x16proto/admin/auth.proto\x12\x05admin\x1a\x1cgoogle/protobuf/struct.proto\"\x83\x01\n" +
 	"\x0fRegisterRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x16\n" +
@@ -418,12 +539,21 @@ const file_proto_admin_auth_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x14\n" +
 	"\x05token\x18\x03 \x01(\tR\x05token\x12\"\n" +
 	"\frefreshToken\x18\x04 \x01(\tR\frefreshToken\x12\x0e\n" +
-	"\x02id\x18\x05 \x01(\tR\x02id2\xc8\x01\n" +
+	"\x02id\x18\x05 \x01(\tR\x02id\"\x90\x01\n" +
+	"\x12TopUpWalletRequest\x123\n" +
+	"\bmerchant\x18\x01 \x01(\v2\x17.google.protobuf.StructR\bmerchant\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12-\n" +
+	"\x05admin\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x05admin\"p\n" +
+	"\x13TopUpWalletResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12%\n" +
+	"\x0etransaction_id\x18\x03 \x01(\tR\rtransactionId2\x8e\x02\n" +
 	"\vAuthService\x127\n" +
 	"\n" +
 	"LoginAdmin\x12\x13.admin.LoginRequest\x1a\x14.admin.LoginResponse\x12>\n" +
 	"\tVerifyOtp\x12\x17.admin.VerifyOtpRequest\x1a\x18.admin.VerifyOtpResponse\x12@\n" +
-	"\rRegisterAdmin\x12\x16.admin.RegisterRequest\x1a\x17.admin.RegisterResponseB-Z+txn-engine-phase-2/proto/gen/go/admin;adminb\x06proto3"
+	"\rRegisterAdmin\x12\x16.admin.RegisterRequest\x1a\x17.admin.RegisterResponse\x12D\n" +
+	"\vTopUpWallet\x12\x19.admin.TopUpWalletRequest\x1a\x1a.admin.TopUpWalletResponseB-Z+txn-engine-phase-2/proto/gen/go/admin;adminb\x06proto3"
 
 var (
 	file_proto_admin_auth_proto_rawDescOnce sync.Once
@@ -437,27 +567,34 @@ func file_proto_admin_auth_proto_rawDescGZIP() []byte {
 	return file_proto_admin_auth_proto_rawDescData
 }
 
-var file_proto_admin_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_proto_admin_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_proto_admin_auth_proto_goTypes = []any{
-	(*RegisterRequest)(nil),   // 0: admin.RegisterRequest
-	(*RegisterResponse)(nil),  // 1: admin.RegisterResponse
-	(*LoginRequest)(nil),      // 2: admin.LoginRequest
-	(*LoginResponse)(nil),     // 3: admin.LoginResponse
-	(*VerifyOtpRequest)(nil),  // 4: admin.VerifyOtpRequest
-	(*VerifyOtpResponse)(nil), // 5: admin.VerifyOtpResponse
+	(*RegisterRequest)(nil),     // 0: admin.RegisterRequest
+	(*RegisterResponse)(nil),    // 1: admin.RegisterResponse
+	(*LoginRequest)(nil),        // 2: admin.LoginRequest
+	(*LoginResponse)(nil),       // 3: admin.LoginResponse
+	(*VerifyOtpRequest)(nil),    // 4: admin.VerifyOtpRequest
+	(*VerifyOtpResponse)(nil),   // 5: admin.VerifyOtpResponse
+	(*TopUpWalletRequest)(nil),  // 6: admin.TopUpWalletRequest
+	(*TopUpWalletResponse)(nil), // 7: admin.TopUpWalletResponse
+	(*structpb.Struct)(nil),     // 8: google.protobuf.Struct
 }
 var file_proto_admin_auth_proto_depIdxs = []int32{
-	2, // 0: admin.AuthService.LoginAdmin:input_type -> admin.LoginRequest
-	4, // 1: admin.AuthService.VerifyOtp:input_type -> admin.VerifyOtpRequest
-	0, // 2: admin.AuthService.RegisterAdmin:input_type -> admin.RegisterRequest
-	3, // 3: admin.AuthService.LoginAdmin:output_type -> admin.LoginResponse
-	5, // 4: admin.AuthService.VerifyOtp:output_type -> admin.VerifyOtpResponse
-	1, // 5: admin.AuthService.RegisterAdmin:output_type -> admin.RegisterResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	8, // 0: admin.TopUpWalletRequest.merchant:type_name -> google.protobuf.Struct
+	8, // 1: admin.TopUpWalletRequest.admin:type_name -> google.protobuf.Struct
+	2, // 2: admin.AuthService.LoginAdmin:input_type -> admin.LoginRequest
+	4, // 3: admin.AuthService.VerifyOtp:input_type -> admin.VerifyOtpRequest
+	0, // 4: admin.AuthService.RegisterAdmin:input_type -> admin.RegisterRequest
+	6, // 5: admin.AuthService.TopUpWallet:input_type -> admin.TopUpWalletRequest
+	3, // 6: admin.AuthService.LoginAdmin:output_type -> admin.LoginResponse
+	5, // 7: admin.AuthService.VerifyOtp:output_type -> admin.VerifyOtpResponse
+	1, // 8: admin.AuthService.RegisterAdmin:output_type -> admin.RegisterResponse
+	7, // 9: admin.AuthService.TopUpWallet:output_type -> admin.TopUpWalletResponse
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_admin_auth_proto_init() }
@@ -471,7 +608,7 @@ func file_proto_admin_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_admin_auth_proto_rawDesc), len(file_proto_admin_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

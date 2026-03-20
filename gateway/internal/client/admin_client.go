@@ -9,10 +9,13 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	adminpb "txn-engine-phase-2/proto/gen/go/admin"
+	walletpb "txn-engine-phase-2/proto/gen/go/wallet"
 )
 
 type AdminClient struct {
-	Client adminpb.AuthServiceClient
+	conn         *grpc.ClientConn
+	AuthClient   adminpb.AuthServiceClient
+	WalletClient walletpb.WalletServiceClient
 }
 
 func NewAdminClient(addr string) *AdminClient {
@@ -21,11 +24,19 @@ func NewAdminClient(addr string) *AdminClient {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("failed to connect to admin service: %v", err)
+		log.Fatalf("failed to connect: %v", err)
 	}
 
 	return &AdminClient{
-		Client: adminpb.NewAuthServiceClient(conn),
+		conn:         conn,
+		AuthClient:   adminpb.NewAuthServiceClient(conn),
+		WalletClient: walletpb.NewWalletServiceClient(conn),
+	}
+}
+
+func (c *AdminClient) Close() {
+	if c.conn != nil {
+		_ = c.conn.Close()
 	}
 }
 
@@ -37,7 +48,7 @@ func (c *AdminClient) Register(
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	return c.Client.RegisterAdmin(ctx, &adminpb.RegisterRequest{
+	return c.AuthClient.RegisterAdmin(ctx, &adminpb.RegisterRequest{
 		Name:     name,
 		Email:    email,
 		Mobile:   mobile,
@@ -46,21 +57,44 @@ func (c *AdminClient) Register(
 	})
 }
 
-func (c *AdminClient) Login(ctx context.Context, mobile string) (*adminpb.LoginResponse, error) {
+func (c *AdminClient) Login(
+	ctx context.Context,
+	mobile string,
+) (*adminpb.LoginResponse, error) {
+
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	return c.Client.LoginAdmin(ctx, &adminpb.LoginRequest{
+	return c.AuthClient.LoginAdmin(ctx, &adminpb.LoginRequest{
 		Mobile: mobile,
 	})
 }
 
-func (c *AdminClient) VerifyOtp(ctx context.Context, mobile, otp string) (*adminpb.VerifyOtpResponse, error) {
+func (c *AdminClient) VerifyOtp(
+	ctx context.Context,
+	mobile, otp string,
+) (*adminpb.VerifyOtpResponse, error) {
+
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	return c.Client.VerifyOtp(ctx, &adminpb.VerifyOtpRequest{
+	return c.AuthClient.VerifyOtp(ctx, &adminpb.VerifyOtpRequest{
 		Mobile: mobile,
 		Otp:    otp,
+	})
+}
+
+func (c *AdminClient) TopUpWallet(
+	ctx context.Context,
+	userID string,
+	amount float64,
+) (*walletpb.TopUpWalletResponse, error) {
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	return c.WalletClient.TopUpWallet(ctx, &walletpb.TopUpWalletRequest{
+		UserId: userID,
+		Amount: amount,
 	})
 }
