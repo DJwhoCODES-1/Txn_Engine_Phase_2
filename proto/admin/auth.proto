@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "txn-engine-phase-2/proto/gen/go/admin;adminpb";
+
+service AuthService {
+  rpc LoginAdmin (LoginRequest) returns (LoginResponse);
+  rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
+}
+
+message LoginRequest {
+  string mobile = 1;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+  string otp = 3;
+}
+
+message VerifyOtpRequest {
+  string mobile = 1;
+  string otp = 2;
+}
+
+message VerifyOtpResponse {
+  bool success = 1;
+  string message = 2;
+  string token = 3;
+  string refreshToken = 4;
+  string id = 5;
+}
